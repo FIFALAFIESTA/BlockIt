@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
             ncomp.setContentTitle("My Notification");
             ncomp.setContentText("Notification Listener Service Example");
             ncomp.setTicker("Notification Listener Service Example");
-            ncomp.setSmallIcon(R.drawable.ic_launcher);
+            ncomp.setSmallIcon(R.mipmap.ic_launcher);
             ncomp.setAutoCancel(true);
             nManager.notify((int)System.currentTimeMillis(),ncomp.build());
         }
