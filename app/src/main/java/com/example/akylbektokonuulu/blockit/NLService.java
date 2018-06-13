@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
+import android.widget.Toast;
 
 public class NLService extends NotificationListenerService {
 
@@ -32,8 +33,10 @@ public class NLService extends NotificationListenerService {
 
         //this.cancelNotification(sbn.getKey());
 
-        Log.i(TAG,"**********  onNotificationPosted");
-        Log.i(TAG,"ID :" + sbn.getId() + "\t" + sbn.getNotification().tickerText + "\t" + sbn.getPackageName());
+        //Log.i(TAG,"**********  onNotificationPosted");
+        //Toast.makeText(this, "-----------\n" + String.valueOf(sbn.getId()) + "\n" + sbn.getGroupKey() + "\n" + sbn.getKey() + "\n" + sbn.getUser(), Toast.LENGTH_SHORT).show();
+        Log.v("MainActivity","-----------\n" + sbn.getNotification().tickerText + "\n" + sbn.getNotification().category + "\n" + sbn.getPackageName());
+
         Intent i = new  Intent("NOTIFICATION_LISTENER_EXAMPLE");
         i.putExtra("notification_event","onNotificationPosted :" + sbn.getPackageName() + "\n");
         sendBroadcast(i);
@@ -42,8 +45,8 @@ public class NLService extends NotificationListenerService {
 
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
-        Log.i(TAG,"********** onNOtificationRemoved");
-        Log.i(TAG,"ID :" + sbn.getId() + "\t" + sbn.getNotification().tickerText +"\t" + sbn.getPackageName());
+       // Log.i(TAG,"********** onNOtificationRemoved");
+        //Log.i(TAG,"ID :" + sbn.getId() + "\t" + sbn.getNotification().tickerText +"\t" + sbn.getPackageName());
         Intent i = new  Intent("NOTIFICATION_LISTENER_EXAMPLE");
         i.putExtra("notification_event","onNotificationRemoved :" + sbn.getPackageName() + "\n");
 
