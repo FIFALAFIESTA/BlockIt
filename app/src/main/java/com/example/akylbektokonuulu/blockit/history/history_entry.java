@@ -1,17 +1,17 @@
 package com.example.akylbektokonuulu.blockit.history;
 
 public class history_entry {
-    String appName;
-    String time;
-    String keyword;
-    String category;
-    String isClicked;
-    String appRate;
+    public String appName;
+    public String time;
+    public String keyword;
+    public String category;
+    public String isClicked;
+    public String appRate;
 
-    history_entry () {
+    public history_entry () {
         appName = keyword = time = category = isClicked = appRate = "null";
     }
-    history_entry (String a, String t, String k, String c, String i, String r) {
+    public history_entry(String a, String t, String k, String c, String i, String r) {
         appName = a;
         time = t;
         keyword = k;
