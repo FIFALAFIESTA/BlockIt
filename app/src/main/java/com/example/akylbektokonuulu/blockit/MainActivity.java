@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
         txtView = (TextView) findViewById(R.id.textView);
         nReceiver = new NotificationReceiver();
         IntentFilter filter = new IntentFilter();
-        filter.addAction("com.example.akylbektokonuulu.notif.NOTIFICATION_LISTENER_EXAMPLE");
+        filter.addAction("NOTIFICATION_LISTENER_EXAMPLE");
         registerReceiver(nReceiver,filter);
     }
 
@@ -48,12 +48,12 @@ public class MainActivity extends Activity {
             nManager.notify((int)System.currentTimeMillis(),ncomp.build());
         }
         else if(v.getId() == R.id.btnClearNotify){
-            Intent i = new Intent("com.example.akylbektokonuulu.notif.NOTIFICATION_LISTENER_SERVICE_EXAMPLE");
+            Intent i = new Intent("NOTIFICATION_LISTENER_SERVICE_EXAMPLE");
             i.putExtra("command","clearall");
             sendBroadcast(i);
         }
         else if(v.getId() == R.id.btnListNotify){
-            Intent i = new Intent("com.example.akylbektokonuulu.notif.NOTIFICATION_LISTENER_SERVICE_EXAMPLE");
+            Intent i = new Intent("NOTIFICATION_LISTENER_SERVICE_EXAMPLE");
             i.putExtra("command","list");
             sendBroadcast(i);
         }
