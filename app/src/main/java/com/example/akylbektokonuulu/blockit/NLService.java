@@ -30,6 +30,8 @@ public class NLService extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
 
+        //this.cancelNotification(sbn.getKey());
+
         Log.i(TAG,"**********  onNotificationPosted");
         Log.i(TAG,"ID :" + sbn.getId() + "\t" + sbn.getNotification().tickerText + "\t" + sbn.getPackageName());
         Intent i = new  Intent("NOTIFICATION_LISTENER_EXAMPLE");
