@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
         ruleList.setText("");
         for (int i=0; i<History.data.size(); i++) {
             history_entry tmp = History.data.get(i);
-            String temp = tmp.appName + tmp.time + tmp.keyword + tmp.category + tmp.isClicked + tmp.appRate + "\n" + ruleList.getText();
+            String temp = tmp.appName +" "+ tmp.time +" "+ tmp.keyword +" "+ tmp.category +" "+ tmp.isClicked +" "+ tmp.appRate +" "+ "\n" + ruleList.getText();
             ruleList.setText(temp);
         }
 
@@ -61,7 +61,7 @@ public class MainActivity extends Activity {
         ruleList.setText("");
         for (int i=0; i<History.data.size(); i++) {
             history_entry tmp = History.data.get(i);
-            String temp = tmp.appName + tmp.time + tmp.keyword + tmp.category + tmp.isClicked + tmp.appRate + "\n" + ruleList.getText();
+            String temp = tmp.appName +" "+ tmp.time +" "+ tmp.keyword +" "+ tmp.category +" "+ tmp.isClicked +" "+ tmp.appRate +" "+ "\n" + ruleList.getText();
             ruleList.setText(temp);
         }
     }
@@ -77,7 +77,7 @@ public class MainActivity extends Activity {
         ruleList.setText("");
         for (int i=0; i<History.data.size(); i++) {
             history_entry tmp = History.data.get(i);
-            String temp = tmp.appName + tmp.time + tmp.keyword + tmp.category + tmp.isClicked + tmp.appRate + "\n" + ruleList.getText();
+            String temp = tmp.appName +" "+ tmp.time +" "+ tmp.keyword +" "+ tmp.category +" "+ tmp.isClicked +" "+ tmp.appRate +" "+ "\n" + ruleList.getText();
             ruleList.setText(temp);
         }
     }
@@ -85,12 +85,6 @@ public class MainActivity extends Activity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        /* Update the history */
-        /*try {
-            History.set_history(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
     }
     public void buttonClicked(View v) {
 

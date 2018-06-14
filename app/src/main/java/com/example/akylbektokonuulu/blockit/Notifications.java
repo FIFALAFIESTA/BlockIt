@@ -64,7 +64,10 @@ public class Notifications extends AppCompatActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            History.data.add(new history_entry("t", "y", "n", "t", "y", "k"));
+            //History.data.add(new history_entry("t", "y", "n", "t", "y", "k"));
+            String stringExtra = intent.getStringExtra("notification_event");
+            history_entry tmp = History.parse(stringExtra);
+            History.data.add(tmp);
             String temp = intent.getStringExtra("notification_event") + "\n" + txtView.getText();
             txtView.setText(temp);
         }
