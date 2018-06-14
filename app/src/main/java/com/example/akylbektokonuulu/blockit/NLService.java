@@ -43,18 +43,18 @@ public class NLService extends NotificationListenerService {
                 );*/
 
 
-        Log.i(TAG,"**********  onNotificationPosted");
-        Log.i(TAG,"ID :" + sbn.getId() + "\t" + sbn.getNotification().tickerText + "\t" + sbn.getPackageName());
+        //Log.i(TAG,"**********  onNotificationPosted");
+        //Log.i(TAG,"ID :" + sbn.getId() + "\t" + sbn.getNotification().tickerText + "\t" + sbn.getPackageName());
 
         Intent i = new  Intent("NOTIFICATION_LISTENER_EXAMPLE");
         //i.putExtra("notification_event","onNotificationPosted :" + sbn.getPackageName() + "\n");
         i.putExtra("notification_event",sbn.getPackageName() + " " +
-                String.valueOf(sbn.getPostTime()) + " " +
-               sbn.getNotification().tickerText + " " +
+                "time" + " " +
+               "keyword" + " " +
                 sbn.getNotification().category + " " +
                 "1" + " " +
                 "null" + " " +
-                "null");
+                "accept");
 
         sendBroadcast(i);
 
@@ -62,8 +62,8 @@ public class NLService extends NotificationListenerService {
 
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
-        Log.i(TAG,"********** onNOtificationRemoved");
-        Log.i(TAG,"ID :" + sbn.getId() + "\t" + sbn.getNotification().tickerText +"\t" + sbn.getPackageName());
+        //Log.i(TAG,"********** onNOtificationRemoved");
+        //Log.i(TAG,"ID :" + sbn.getId() + "\t" + sbn.getNotification().tickerText +"\t" + sbn.getPackageName());
         Intent i = new  Intent("NOTIFICATION_LISTENER_EXAMPLE");
         i.putExtra("notification_event","onNotificationRemoved :" + sbn.getPackageName() + "\n");
 

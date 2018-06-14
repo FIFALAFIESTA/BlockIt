@@ -51,8 +51,8 @@ public class Notifications extends AppCompatActivity {
 
         try {
             get_history();
-            if(!History.data.isEmpty())
-                Log.v("this", String.valueOf(History.data.size()));
+            //if(!History.data.isEmpty())
+             //   Log.v("this", String.valueOf(History.data.size()));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -64,8 +64,8 @@ public class Notifications extends AppCompatActivity {
         super.onDestroy();
         try {
             //History.get_history(this);
-            if(!History.data.isEmpty())
-            Log.v("this", String.valueOf(History.data.size()));
+            //if(!History.data.isEmpty())
+            //Log.v("this", String.valueOf(History.data.size()));
             set_history();
         } catch (IOException e) {
             e.printStackTrace();
@@ -78,8 +78,8 @@ public class Notifications extends AppCompatActivity {
         super.onPause();
         try {
             //History.get_history(this);
-            if(!History.data.isEmpty())
-            Log.v("this", String.valueOf(History.data.size()));
+            //if(!History.data.isEmpty())
+            //Log.v("this", String.valueOf(History.data.size()));
             set_history();
         } catch (IOException e) {
             e.printStackTrace();
@@ -134,7 +134,7 @@ public class Notifications extends AppCompatActivity {
 
 
     Double NB_List_Class (history_entry features, String condition){
-        Double answer = 1.0;
+        Double answer = 0.9999999999;
         int how_many_features = 7;
 
 
@@ -143,21 +143,21 @@ public class Notifications extends AppCompatActivity {
 
             for(int j=0; j<History.data.size(); j++) {
                 if(features.get(i).equals(History.data.get(j).get(i)) && condition.equals(History.data.get(j).get(6))) {
-                    if (!features.get(j).equals("null") && !condition.equals("null"))
+                    //if (!features.get(j).equals("null") && !condition.equals("null"))
                         count1++;
                 }
 
                 if(condition.equals(History.data.get(j).get(6))) {
-                    if (!condition.equals("null"))
+                    //if (!condition.equals("null"))
                         count2++;
                 }
             }
-
-            answer = answer * count1 * 1.0 / count2*1.0;
-
+            if( count2 != 0)
+                answer = answer * (count1  * 1.0) / (count2 )*1.0;
+            Log.v("this",String.valueOf(count1) + " ///// " + String.valueOf(count2)  + " //// " +  String.valueOf(condition) );
         }
 
-
+        if(answer == 1.0) answer = 0.0;
 
         return answer;
 
@@ -168,15 +168,17 @@ public class Notifications extends AppCompatActivity {
         classes.add("accept"); classes.add("postpone"); classes.add("decline");
 
         Double numerator = NB_List_Class(entry, give_condition) * 0.33333333333;
+        Log.v("this",  String.valueOf(numerator) + "  " + give_condition );
         Double denumenator = 0.0;
 
         for(int i=0; i<3; i++) {
             Double cur = NB_List_Class(entry, classes.get(i))* 0.33333333333;
+
             denumenator += cur;
         }
-
-
-        return (numerator+1.0) * 1.0 / (denumenator+2.0) * 1.0;
+        Log.v("this",String.valueOf(numerator) + " :::: " + String.valueOf(denumenator) );
+        if(denumenator == 0.000) denumenator = 1.0;
+        return (numerator) * 1.0 / (denumenator) * 1.0;
     }
 
     public ArrayList<Double> NB_ALL(history_entry entry){
@@ -239,9 +241,9 @@ public class Notifications extends AppCompatActivity {
         }
         is.close();
         in.close();
-        if(!History.data.isEmpty())
-            Log.v("this", "get_history: " + String.valueOf(History.data.size()));
-        else Toast.makeText(this,"fu",Toast.LENGTH_SHORT).show();
+      //  if(!History.data.isEmpty())
+        //    Log.v("this", "get_history: " + String.valueOf(History.data.size()));
+        //else Toast.makeText(this,"fu",Toast.LENGTH_SHORT).show();
     }
 
 
