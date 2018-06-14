@@ -37,7 +37,7 @@ public class history {
         }
         //  Log.v("MainActivity", "MAC : " + MAC);
         //  Log.v("MainActivity", "RSSI : " + String.valueOf(RSSI));
-        history_entry ans = new history_entry(features.get(0), features.get(1), features.get(2), features.get(3), features.get(4), features.get(5));
+        history_entry ans = new history_entry(features.get(0), features.get(1), features.get(2), features.get(3), features.get(4), features.get(5),features.get(6));
 
         return ans;
     }

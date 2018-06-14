@@ -7,6 +7,13 @@ import android.content.IntentFilter;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+
+import com.example.akylbektokonuulu.blockit.history.history;
+import com.example.akylbektokonuulu.blockit.history.history_entry;
+
+import java.util.ArrayList;
+
 
 public class NLService extends NotificationListenerService {
     private String TAG = this.getClass().getSimpleName();
@@ -71,4 +78,5 @@ public class NLService extends NotificationListenerService {
 
         }
     }
+
 }
