@@ -1,14 +1,14 @@
 package com.example.akylbektokonuulu.blockit.history;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 public class history {
@@ -44,18 +44,18 @@ public class history {
 
     public void get_history(Context context) throws IOException {
 
-        String name = "EXPERIMENT_HISTORY.txt";
-        File MYFILE = new File(context.getExternalFilesDir("BLOCKIT"), name);
-        MYFILE.createNewFile();
-        FileInputStream is = new FileInputStream(MYFILE);
-        DataInputStream in = new DataInputStream(is);
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        //String name = "EXPERIMENT_HISTORY.txt";
+        //File MYFILE = new File(context.getExternalFilesDir("BLOCKIT"), name);
+        //MYFILE.createNewFile();
+        //FileInputStream is = new FileInputStream(MYFILE);
+        //DataInputStream in = new DataInputStream(is);
+        //BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String strLine;
-
+        data.clear();
         //ArrayList<history_entry> data = new ArrayList<>();
 
-        String mydata = "";
-        while ((strLine = br.readLine()) != null) {
+        //String mydata = "";
+        /*while ((strLine = br.readLine()) != null) {
             history_entry temp = parse(strLine);
             //String mmac = temp.mac;
             //int rrssi = temp.rssi;
@@ -74,26 +74,46 @@ public class history {
 
             data.add(temp);
         }
-        in.close();
-        //return data;
+        in.close();*/
+
+        try {
+            InputStream inputStream = context.openFileInput("history.txt");
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+            BufferedReader br = new BufferedReader(inputStreamReader);
+
+            String mydata = "";
+            while ((strLine = br.readLine()) != null) {
+                history_entry temp = parse(strLine);
+                boolean ok = true;
+                int index = 0;
+                data.add(temp);
+            }
+                inputStream.close();
+        }
+        catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        }
     }
 
 
     public void set_history(Context context) throws IOException {
-        String name =  "EXPERIMENT_HISTORY.txt";
-        File MYFILE = new File(context.getExternalFilesDir("PIDARAZ"), name);
-        FileOutputStream os = new FileOutputStream(MYFILE);
+        //String name =  "EXPERIMENT_HISTORY.txt";
+        //File MYFILE = new File(context.getExternalFilesDir("PIDARAZ"), name);
+        //FileOutputStream os = new FileOutputStream(MYFILE);
 
-        int sum = 0;
-        int error = 0, KOL = 0;
-        if(!data.isEmpty())
-        for (int j=0; j<6; j++) {
-            history_entry i = data.get(j);
-            os.write((i.appName + " " + i.time+ " " + i.keyword + " " +
-                    i.category + " " + i.isClicked + " "  + i.appRate).getBytes()
-            );
+        try {
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("history.txt", Context.MODE_PRIVATE));
+            if (!data.isEmpty())
+                for (int j = 0; j < data.size(); j++) {
+                    history_entry i = data.get(j);
+                    outputStreamWriter.write(i.appName + " " + i.time + " " + i.keyword + " " +
+                            i.category + " " + i.isClicked + " " + i.appRate + "\n");
+                }
+            outputStreamWriter.close();
+        } catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
         }
-
     }
-
 }

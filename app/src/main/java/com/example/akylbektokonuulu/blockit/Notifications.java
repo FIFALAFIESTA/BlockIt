@@ -11,8 +11,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-public class Notifications extends AppCompatActivity {
+import com.example.akylbektokonuulu.blockit.history.history;
+import com.example.akylbektokonuulu.blockit.history.history_entry;
 
+import java.io.IOException;
+
+public class Notifications extends AppCompatActivity {
+    history History;
     private TextView txtView;
     private NotificationReceiver nReceiver;
 
@@ -25,18 +30,41 @@ public class Notifications extends AppCompatActivity {
         IntentFilter filter = new IntentFilter();
         filter.addAction("NOTIFICATION_LISTENER_EXAMPLE");
         registerReceiver(nReceiver,filter);
+
+        History = new history();
+        try {
+            History.get_history(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        try {
+            History.set_history(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         unregisterReceiver(nReceiver);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            History.set_history(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     class NotificationReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            History.data.add(new history_entry("t", "y", "n", "t", "y", "k"));
             String temp = intent.getStringExtra("notification_event") + "\n" + txtView.getText();
             txtView.setText(temp);
         }
