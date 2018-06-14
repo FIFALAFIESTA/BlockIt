@@ -8,17 +8,29 @@ import android.content.IntentFilter;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.akylbektokonuulu.blockit.history.history;
 import com.example.akylbektokonuulu.blockit.history.history_entry;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+
+import weka.gui.Main;
 
 public class Notifications extends AppCompatActivity {
     history History;
+    String name;
+    File MYFILE;
     private TextView txtView;
     private NotificationReceiver nReceiver;
 
@@ -32,9 +44,16 @@ public class Notifications extends AppCompatActivity {
         filter.addAction("NOTIFICATION_LISTENER_EXAMPLE");
         registerReceiver(nReceiver,filter);
 
+        name = "hist.txt";
+        MYFILE = new File(getExternalFilesDir("BLOCKIT"), name);
+
         History = new history();
+
         try {
-            History.get_history(this);
+            get_history();
+            if(!History.data.isEmpty())
+                Log.v("this", String.valueOf(History.data.size()));
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -44,7 +63,10 @@ public class Notifications extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         try {
-            History.set_history(this);
+            //History.get_history(this);
+            if(!History.data.isEmpty())
+            Log.v("this", String.valueOf(History.data.size()));
+            set_history();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -55,7 +77,10 @@ public class Notifications extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         try {
-            History.set_history(this);
+            //History.get_history(this);
+            if(!History.data.isEmpty())
+            Log.v("this", String.valueOf(History.data.size()));
+            set_history();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -68,8 +93,17 @@ public class Notifications extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             //History.data.add(new history_entry("t", "y", "n", "t", "y", "k"));
             String stringExtra = intent.getStringExtra("notification_event");
-            history_entry tmp = History.parse(stringExtra);
+            history_entry tmp = parse(stringExtra);
+            ArrayList<Double> action = new ArrayList<Double>(3);
+            action =        NB_ALL(tmp);
+
+            Log.v("this",String.valueOf(action.get(0)) + " ---- " + String.valueOf(action.get(1))  + " ---- " +  String.valueOf(action.get(2)) );
+//            Toast.makeText(this, String.valueOf(1.1),Toast.LENGTH_SHORT).show();
+            // String.valueOf(action.get(0)) + "\n" + String.valueOf(action.get(1))  + "\n" +  String.valueOf(action.get(2))
+
+
             History.data.add(tmp);
+
             String temp = intent.getStringExtra("notification_event") + "\n" + txtView.getText();
             txtView.setText(temp);
         }
@@ -101,19 +135,19 @@ public class Notifications extends AppCompatActivity {
 
     Double NB_List_Class (history_entry features, String condition){
         Double answer = 1.0;
-        int how_many_features = 6;
+        int how_many_features = 7;
 
 
         for(int i=0; i<how_many_features; i++) {
             Double count1 = 0.0, count2 = 0.0;
 
             for(int j=0; j<History.data.size(); j++) {
-                if(features.get(i).equals(History.data.get(j)) && condition.equals(History.data.get(6))) {
-                    if (!features.get(i).equals("null") && !condition.equals("null"))
+                if(features.get(i).equals(History.data.get(j).get(i)) && condition.equals(History.data.get(j).get(6))) {
+                    if (!features.get(j).equals("null") && !condition.equals("null"))
                         count1++;
                 }
 
-                if(condition.equals(History.data.get(6))) {
+                if(condition.equals(History.data.get(j).get(6))) {
                     if (!condition.equals("null"))
                         count2++;
                 }
@@ -158,5 +192,79 @@ public class Notifications extends AppCompatActivity {
         }
 
         return probability_of_action;
+    }
+
+
+
+
+    public history_entry parse(String str) {
+
+        ArrayList<String> features = new ArrayList<String>(0);
+
+        String s = "";
+        int index = 0;
+        str = str + " ";
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) != ' ') {
+                s = s + str.charAt(i);
+            } else {
+                if (s.equals("")) continue;
+                features.add(s);
+                s = "";
+            }
+        }
+        //  Log.v("MainActivity", "MAC : " + MAC);
+        //  Log.v("MainActivity", "RSSI : " + String.valueOf(RSSI));
+        history_entry ans = new history_entry(features.get(0), features.get(1), features.get(2), features.get(3), features.get(4), features.get(5),features.get(6));
+
+        return ans;
+    }
+
+    public void get_history() throws IOException {
+
+        MYFILE.createNewFile();
+        FileInputStream is = new FileInputStream(MYFILE);
+        DataInputStream in = new DataInputStream(is);
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        String strLine;
+        //data.clear();
+        //ArrayList<history_entry> data = new ArrayList<>();
+
+        String mydata = "";
+        while ((strLine = br.readLine()) != null) {
+            history_entry temp = parse(strLine);
+            boolean ok = true;
+            int index = 0;
+            History.data.add(temp);
+        }
+        is.close();
+        in.close();
+        if(!History.data.isEmpty())
+            Log.v("this", "get_history: " + String.valueOf(History.data.size()));
+        else Toast.makeText(this,"fu",Toast.LENGTH_SHORT).show();
+    }
+
+
+    public void set_history() throws IOException {
+        FileOutputStream os = new FileOutputStream(MYFILE);
+        //MYFILE.createNewFile();
+        //if(!data.isEmpty())
+        //   Log.v("this", String.valueOf(data.size()));
+        //Toast.makeText(Notifications.this, String.valueOf(data.size()),Toast.LENGTH_SHORT).show();
+        try {
+            //OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("newhistory.txt", Context.MODE_PRIVATE));
+            if (!History.data.isEmpty())
+                for (int j = 0; j < History.data.size(); j++) {
+                    history_entry i = History.data.get(j);
+                    //outputStreamWriter.write(i.appName + " " + i.time + " " + i.keyword + " " +
+                    //        i.category + " " + i.isClicked + " " + i.appRate + "\n");
+                    os.write((i.appName + " " + i.time + " " + i.keyword + " " +
+                            i.category + " " + i.isClicked + " " + i.appRate + " " + i.action_token+"\n").getBytes());
+                }
+            //outputStreamWriter.close();
+            os.close();
+        } catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
     }
 }

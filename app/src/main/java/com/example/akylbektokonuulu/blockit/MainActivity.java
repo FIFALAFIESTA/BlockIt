@@ -34,52 +34,52 @@ public class MainActivity extends Activity {
 
         History = new history();
         /* Get the history */
-        try {
+        /*try {
             History.get_history(this);
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        ruleList = findViewById(R.id.rule_list);
+        }*/
+        /*ruleList = findViewById(R.id.rule_list);
         ruleList.setText("");
         for (int i=0; i<History.data.size(); i++) {
             history_entry tmp = History.data.get(i);
             String temp = tmp.appName +" "+ tmp.time +" "+ tmp.keyword +" "+ tmp.category +" "+ tmp.isClicked +" "+ tmp.appRate +" "+ "\n" + ruleList.getText();
             ruleList.setText(temp);
         }
-
+*/
         //ruleList.setText("alooooooha!");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        try {
+        /*try {
             History.get_history(this);
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        ruleList.setText("");
+        }*/
+        /*ruleList.setText("");
         for (int i=0; i<History.data.size(); i++) {
             history_entry tmp = History.data.get(i);
             String temp = tmp.appName +" "+ tmp.time +" "+ tmp.keyword +" "+ tmp.category +" "+ tmp.isClicked +" "+ tmp.appRate +" "+ "\n" + ruleList.getText();
             ruleList.setText(temp);
-        }
+        }*/
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        try {
+        /*try {
             History.get_history(this);
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        ruleList.setText("");
+        }*/
+        /*ruleList.setText("");
         for (int i=0; i<History.data.size(); i++) {
             history_entry tmp = History.data.get(i);
             String temp = tmp.appName +" "+ tmp.time +" "+ tmp.keyword +" "+ tmp.category +" "+ tmp.isClicked +" "+ tmp.appRate +" "+ "\n" + ruleList.getText();
             ruleList.setText(temp);
-        }
+        }*/
     }
 
     @Override

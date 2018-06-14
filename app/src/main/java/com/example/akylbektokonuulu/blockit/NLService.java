@@ -50,10 +50,11 @@ public class NLService extends NotificationListenerService {
         //i.putExtra("notification_event","onNotificationPosted :" + sbn.getPackageName() + "\n");
         i.putExtra("notification_event",sbn.getPackageName() + " " +
                 String.valueOf(sbn.getPostTime()) + " " +
-                "keyword" + " " +
+               sbn.getNotification().tickerText + " " +
                 sbn.getNotification().category + " " +
-                "2" + " " +
-                "5");
+                "1" + " " +
+                "null" + " " +
+                "null");
 
         sendBroadcast(i);
 
