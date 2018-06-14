@@ -21,7 +21,7 @@ public class history {
 
     public history_entry parse(String str) {
 
-        ArrayList<String> features = new ArrayList<>(0);
+        ArrayList<String> features = new ArrayList<String>(0);
 
         String s = "";
         int index = 0;

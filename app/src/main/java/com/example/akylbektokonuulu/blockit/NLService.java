@@ -1,5 +1,4 @@
 package com.example.akylbektokonuulu.blockit;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -35,11 +34,29 @@ public class NLService extends NotificationListenerService {
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
+        /*history_entry tmp = new history_entry(sbn.getPackageName(),
+                String.valueOf(sbn.getPostTime()),
+                "keyword",
+                sbn.getNotification().category,
+                "2",
+                "5"
+                );*/
+
+
         Log.i(TAG,"**********  onNotificationPosted");
         Log.i(TAG,"ID :" + sbn.getId() + "\t" + sbn.getNotification().tickerText + "\t" + sbn.getPackageName());
+
         Intent i = new  Intent("NOTIFICATION_LISTENER_EXAMPLE");
-        i.putExtra("notification_event","onNotificationPosted :" + sbn.getPackageName() + "\n");
+        //i.putExtra("notification_event","onNotificationPosted :" + sbn.getPackageName() + "\n");
+        i.putExtra("notification_event",sbn.getPackageName() + " " +
+                String.valueOf(sbn.getPostTime()) + " " +
+                "keyword" + " " +
+                sbn.getNotification().category + " " +
+                "2" + " " +
+                "5");
+
         sendBroadcast(i);
+
     }
 
     @Override

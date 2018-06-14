@@ -61,15 +61,7 @@ public class Notifications extends AppCompatActivity {
         }
     }
 
-    class NotificationReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            History.data.add(new history_entry("t", "y", "n", "t", "y", "k","ds"));
-            String temp = intent.getStringExtra("notification_event") + "\n" + txtView.getText();
-            txtView.setText(temp);
-        }
-    }
+   
 
     public void buttonClicked(View v){
 
