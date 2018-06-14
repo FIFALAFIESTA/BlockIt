@@ -61,7 +61,7 @@ public class Notifications extends AppCompatActivity {
         }
     }
 
-   
+
 
     public void buttonClicked(View v){
 
