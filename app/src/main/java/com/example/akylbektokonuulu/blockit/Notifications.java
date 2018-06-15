@@ -1,6 +1,7 @@
 package com.example.akylbektokonuulu.blockit;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +12,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.akylbektokonuulu.blockit.history.history;
 import com.example.akylbektokonuulu.blockit.history.history_entry;
@@ -24,10 +24,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-
-import weka.gui.Main;
+import java.util.HashSet;
 
 public class Notifications extends AppCompatActivity {
+    HashSet<String> App;
     history History;
     String name;
     File MYFILE;
@@ -48,6 +48,7 @@ public class Notifications extends AppCompatActivity {
         MYFILE = new File(getExternalFilesDir("BLOCKIT"), name);
 
         History = new history();
+        App = new HashSet<>();
 
         try {
             get_history();
@@ -63,9 +64,6 @@ public class Notifications extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         try {
-            //History.get_history(this);
-            //if(!History.data.isEmpty())
-            //Log.v("this", String.valueOf(History.data.size()));
             set_history();
         } catch (IOException e) {
             e.printStackTrace();
@@ -77,37 +75,82 @@ public class Notifications extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         try {
-            //History.get_history(this);
-            //if(!History.data.isEmpty())
-            //Log.v("this", String.valueOf(History.data.size()));
             set_history();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-
     class NotificationReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            //History.data.add(new history_entry("t", "y", "n", "t", "y", "k"));
-            String stringExtra = intent.getStringExtra("notification_event");
-            history_entry tmp = parse(stringExtra);
-            ArrayList<Double> action = new ArrayList<Double>(3);
-            action =        NB_ALL(tmp);
+            if (intent.hasExtra("notification_event")) {
+                //History.data.add(new history_entry("t", "y", "n", "t", "y", "k"));
+                String stringExtra = intent.getStringExtra("notification_event");
+                history_entry tmp = parse(stringExtra);
+                ArrayList<Double> action = new ArrayList<Double>(3);
+                action = NB_ALL(tmp);
 
-            Log.v("this",String.valueOf(action.get(0)) + " ---- " + String.valueOf(action.get(1))  + " ---- " +  String.valueOf(action.get(2)) );
-//            Toast.makeText(this, String.valueOf(1.1),Toast.LENGTH_SHORT).show();
-            // String.valueOf(action.get(0)) + "\n" + String.valueOf(action.get(1))  + "\n" +  String.valueOf(action.get(2))
+                Log.v("this", String.valueOf(action.get(0)) + " ---- " + String.valueOf(action.get(1)) + " ---- " + String.valueOf(action.get(2)));
+                //            Toast.makeText(this, String.valueOf(1.1),Toast.LENGTH_SHORT).show();
+                // String.valueOf(action.get(0)) + "\n" + String.valueOf(action.get(1))  + "\n" +  String.valueOf(action.get(2))
 
+                double accept = action.get(0);
+                double postpone = action.get(1);
+                double decline = action.get(2);
+                String key = intent.getStringExtra("key");
 
-            History.data.add(tmp);
+                //if (decline > accept && decline > postpone) {
+                /*if (true) {
+                    Intent outcome = new Intent("NOTIFICATION_LISTENER_SERVICE_EXAMPLE");
+                    outcome.putExtra("command", "decline");
+                    outcome.putExtra("key", key);
+                    sendBroadcast(outcome);
+                }
+                if (postpone > accept && postpone > decline) {
+                    Intent outcome = new Intent("NOTIFICATION_LISTENER_SERVICE_EXAMPLE");
+                    outcome.putExtra("command", "postpone");
+                    outcome.putExtra("key", key);
+                    sendBroadcast(outcome);
+                }*/
 
-            String temp = intent.getStringExtra("notification_event") + "\n" + txtView.getText();
-            txtView.setText(temp);
+                /* TODO: make condition for notification */
+                if (!tmp.appName.equals("com.example.akylbektokonuulu.blockit") && !App.contains(tmp.appName)) {
+                    NotificationManager nManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+                    //Intent rate3 = new Intent(Notifications.this, RateNotificationReceiver.class);
+                    Intent rate3 = new Intent(getApplicationContext(), rateActivity.class);
+                    rate3.putExtra("app", tmp.appName);
+                    PendingIntent pendingIntent3 =
+                            PendingIntent.getActivity(Notifications.this, 0, rate3, 0);
+
+                    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(Notifications.this)
+                            .setSmallIcon(R.mipmap.ic_launcher)
+                            .setContentTitle("BlockIt")
+                            .setContentText("Please rate the " +tmp.appName+ " app!")
+                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                            .addAction(R.drawable.baseline_grade_24, "Rate", pendingIntent3);
+
+                    nManager.notify((int)System.currentTimeMillis(),mBuilder.build());
+                    App.add(tmp.appName);
+                }
+
+                History.data.add(tmp);
+}
+            if (intent.hasExtra("notification_event_list")) {
+                String temp = intent.getStringExtra("notification_event_list") + "\n" + txtView.getText();
+                txtView.setText(temp);
+            }
+            if (intent.hasExtra("app")) {
+                String rate = intent.getAction();
+                String app = intent.getStringExtra("app");
+                String temp = app + "'s rating is set to: " + rate + "\n" + txtView.getText();
+                txtView.setText(temp);
+            }
         }
     }
+
     public void buttonClicked(View v){
 
         if(v.getId() == R.id.btnCreateNotify){

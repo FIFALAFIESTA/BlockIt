@@ -21,11 +21,16 @@
         </activity>
         <activity android:name=".Notifications" />
 
-        <service android:label="@string/app_name" android:name="com.example.akylbektokonuulu.blockit.NLService" android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+        <service
+            android:name=".NLService"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
-                <action android:name="android.service.notification.NotificationListenerService"/>
+                <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
+
+        <activity android:name=".rateActivity"></activity>
     </application>
 
 </manifest>

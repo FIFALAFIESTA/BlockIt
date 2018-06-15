@@ -1,10 +1,13 @@
 package com.example.akylbektokonuulu.blockit;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 
@@ -47,7 +50,7 @@ public class NLService extends NotificationListenerService {
         //Log.i(TAG,"ID :" + sbn.getId() + "\t" + sbn.getNotification().tickerText + "\t" + sbn.getPackageName());
 
         Intent i = new  Intent("NOTIFICATION_LISTENER_EXAMPLE");
-        //i.putExtra("notification_event","onNotificationPosted :" + sbn.getPackageName() + "\n");
+        i.putExtra("notification_event_list","onNotificationPosted :" + sbn.getPackageName() + "\n");
         i.putExtra("notification_event",sbn.getPackageName() + " " +
                 "time" + " " +
                "keyword" + " " +
@@ -55,6 +58,7 @@ public class NLService extends NotificationListenerService {
                 "1" + " " +
                 "null" + " " +
                 "accept");
+        i.putExtra("key", sbn.getKey());
 
         sendBroadcast(i);
 
@@ -65,7 +69,14 @@ public class NLService extends NotificationListenerService {
         //Log.i(TAG,"********** onNOtificationRemoved");
         //Log.i(TAG,"ID :" + sbn.getId() + "\t" + sbn.getNotification().tickerText +"\t" + sbn.getPackageName());
         Intent i = new  Intent("NOTIFICATION_LISTENER_EXAMPLE");
-        i.putExtra("notification_event","onNotificationRemoved :" + sbn.getPackageName() + "\n");
+        i.putExtra("notification_event_list","onNotificationRemoved :" + sbn.getPackageName() + "\n");
+        i.putExtra("notification_event",sbn.getPackageName() + " " +
+                "time" + " " +
+                "keyword" + " " +
+                sbn.getNotification().category + " " +
+                "1" + " " +
+                "null" + " " +
+                "decline");
 
         sendBroadcast(i);
     }
@@ -79,21 +90,23 @@ public class NLService extends NotificationListenerService {
             }
             else if(intent.getStringExtra("command").equals("list")){
                 Intent i1 = new  Intent("NOTIFICATION_LISTENER_EXAMPLE");
-                i1.putExtra("notification_event","=====================");
+                i1.putExtra("notification_event_list","=====================");
                 sendBroadcast(i1);
                 int i=1;
                 for (StatusBarNotification sbn : NLService.this.getActiveNotifications()) {
                     Intent i2 = new  Intent("NOTIFICATION_LISTENER_EXAMPLE");
-                    i2.putExtra("notification_event",i +" " + sbn.getPackageName() + "\n");
+                    i2.putExtra("notification_event_list",i +" " + sbn.getPackageName() + "\n");
                     sendBroadcast(i2);
                     i++;
                 }
                 Intent i3 = new  Intent("NOTIFICATION_LISTENER_EXAMPLE");
-                i3.putExtra("notification_event","===== Notification List ====");
+                i3.putExtra("notification_event_list","===== Notification List ====");
                 sendBroadcast(i3);
 
             }
-
+            else if (intent.getStringExtra("command").equals("decline")) {
+                NLService.this.cancelNotification(intent.getStringExtra("key"));
+            }
         }
     }
 
