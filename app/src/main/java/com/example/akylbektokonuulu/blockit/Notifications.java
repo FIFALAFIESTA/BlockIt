@@ -92,7 +92,7 @@ public class Notifications extends AppCompatActivity {
                 ArrayList<Double> action = new ArrayList<Double>(3);
                 action = NB_ALL(tmp);
 
-                Log.v("this", String.valueOf(action.get(0)) + " ---- " + String.valueOf(action.get(1)) + " ---- " + String.valueOf(action.get(2)));
+                //Log.v("this", String.valueOf(action.get(0)) + " ---- " + String.valueOf(action.get(1)) + " ---- " + String.valueOf(action.get(2)));
                 //            Toast.makeText(this, String.valueOf(1.1),Toast.LENGTH_SHORT).show();
                 // String.valueOf(action.get(0)) + "\n" + String.valueOf(action.get(1))  + "\n" +  String.valueOf(action.get(2))
 
@@ -101,19 +101,25 @@ public class Notifications extends AppCompatActivity {
                 double decline = action.get(2);
                 String key = intent.getStringExtra("key");
 
-                //if (decline > accept && decline > postpone) {
-                /*if (true) {
+                if (decline >= accept && decline >= postpone) {
                     Intent outcome = new Intent("NOTIFICATION_LISTENER_SERVICE_EXAMPLE");
                     outcome.putExtra("command", "decline");
                     outcome.putExtra("key", key);
                     sendBroadcast(outcome);
                 }
-                if (postpone > accept && postpone > decline) {
+                if (postpone >= accept && postpone >= decline) {
                     Intent outcome = new Intent("NOTIFICATION_LISTENER_SERVICE_EXAMPLE");
                     outcome.putExtra("command", "postpone");
                     outcome.putExtra("key", key);
                     sendBroadcast(outcome);
-                }*/
+                }
+                if (accept >= postpone && accept >= decline) {
+                    Intent outcome = new Intent("NOTIFICATION_LISTENER_SERVICE_EXAMPLE");
+                    outcome.putExtra("command", "accept");
+                    outcome.putExtra("key", key);
+                    sendBroadcast(outcome);
+                }
+
 
                 /* TODO: make condition for notification */
                 if (!tmp.appName.equals("com.example.akylbektokonuulu.blockit") && !App.contains(tmp.appName)) {
@@ -197,7 +203,7 @@ public class Notifications extends AppCompatActivity {
             }
             if( count2 != 0)
                 answer = answer * (count1  * 1.0) / (count2 )*1.0;
-            Log.v("this",String.valueOf(count1) + " ///// " + String.valueOf(count2)  + " //// " +  String.valueOf(condition) );
+            //Log.v("this",String.valueOf(count1) + " ///// " + String.valueOf(count2)  + " //// " +  String.valueOf(condition) );
         }
 
         if(answer == 1.0) answer = 0.0;
@@ -211,7 +217,7 @@ public class Notifications extends AppCompatActivity {
         classes.add("accept"); classes.add("postpone"); classes.add("decline");
 
         Double numerator = NB_List_Class(entry, give_condition) * 0.33333333333;
-        Log.v("this",  String.valueOf(numerator) + "  " + give_condition );
+        //Log.v("this",  String.valueOf(numerator) + "  " + give_condition );
         Double denumenator = 0.0;
 
         for(int i=0; i<3; i++) {
@@ -219,7 +225,7 @@ public class Notifications extends AppCompatActivity {
 
             denumenator += cur;
         }
-        Log.v("this",String.valueOf(numerator) + " :::: " + String.valueOf(denumenator) );
+        //Log.v("this",String.valueOf(numerator) + " :::: " + String.valueOf(denumenator) );
         if(denumenator == 0.000) denumenator = 1.0;
         return (numerator) * 1.0 / (denumenator) * 1.0;
     }
@@ -272,8 +278,6 @@ public class Notifications extends AppCompatActivity {
         DataInputStream in = new DataInputStream(is);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String strLine;
-        //data.clear();
-        //ArrayList<history_entry> data = new ArrayList<>();
 
         String mydata = "";
         while ((strLine = br.readLine()) != null) {
@@ -284,27 +288,17 @@ public class Notifications extends AppCompatActivity {
         }
         is.close();
         in.close();
-      //  if(!History.data.isEmpty())
-        //    Log.v("this", "get_history: " + String.valueOf(History.data.size()));
-        //else Toast.makeText(this,"fu",Toast.LENGTH_SHORT).show();
     }
 
 
     public void set_history() throws IOException {
         FileOutputStream os = new FileOutputStream(MYFILE);
-        //MYFILE.createNewFile();
-        //if(!data.isEmpty())
-        //   Log.v("this", String.valueOf(data.size()));
-        //Toast.makeText(Notifications.this, String.valueOf(data.size()),Toast.LENGTH_SHORT).show();
         try {
-            //OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("newhistory.txt", Context.MODE_PRIVATE));
             if (!History.data.isEmpty())
                 for (int j = 0; j < History.data.size(); j++) {
                     history_entry i = History.data.get(j);
-                    //outputStreamWriter.write(i.appName + " " + i.time + " " + i.keyword + " " +
-                    //        i.category + " " + i.isClicked + " " + i.appRate + "\n");
-                    os.write((i.appName + " " + i.time + " " + i.keyword + " " +
-                            i.category + " " + i.isClicked + " " + i.appRate + " " + i.action_token+"\n").getBytes());
+                    os.write((i.appName + " " + i.time + " " + i.foreground + " " +
+                            i.category + " " + i.background + " " + i.appRate + " " + i.action_token+"\n").getBytes());
                 }
             //outputStreamWriter.close();
             os.close();
